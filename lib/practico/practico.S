@@ -31,13 +31,16 @@
  * Sumar dos enteros de 32 bit
  *  suma(2,3) => 5
  * Entrada
- *  a->R0, b->R1 : sumandos, enteros de 32 bit con signo 
+ *  a->R0, b->R1 : sumandos, enteros de 32 bit con signo ----------------> a->R0????
  * Salida
  *  R0     : suma, entero de 32 bit con signo
  */
 defun suma
     push {r4-r11,lr}
     // Insertar código a continuación
+
+    ADD R0, R0, R1              //puedo sacar el primer R0
+
 
     // Retorno, antes R0 debe tener el valor correcto
     pop {r4-r11,pc}
