@@ -62,7 +62,23 @@ endfun suma
 defun sumatoria
     push {r4-r11,lr}
     // Insertar código a continuación
+    MOV R3, #0 //pone a 0 parte baja
+    MOV R4, #0 //pone a 0 parte alta
+bucle:  CMP R0, #0
+        BEQ salida
+        LDR R2, [R1] //cargas el valor al que apunta R1
+        CMP R2, #0
+        BGE positivo
+        ADD R4, 0xFFFFFFFF
+positivo:   ADDS R3, R2 //sumas en la parte baja
+            ADC R4, #0 //pasas el carry        
+            SUB R0, #1
+            ADD R1, #4 
+            BAL  bucle
 
+
+salida: MOV R0, R3
+        MOV R1, R4
     // Retorno, antes R1:R0 debe tener el valor correcto
     pop {r4-r11,pc}
 endfun sumatoria
@@ -83,7 +99,40 @@ endfun sumatoria
 defun posicion_maximo
     push {r4-r11,lr}
     // Insertar código a continuación
+//    CMP R0, #0
+//    BEQ salida1            
+//    LDR R3,[R1]
+//    MOV R4, #0
+//    MOV R5, #0
+//1:  SUB R0, #1
+//    CMP R0, #0 
+//    BEQ salida1     
+//    ADD R1, #4
+//    ADD R4, #1
+//    LDR R2,[R1]
+//    CMP R2, R3
+//    BLE 1b
+//    MOV R3, R2 
+//    MOV R5, R4
+//    B 1b
+    MOV R4, #0
+    MOV R5, #0
+    CMP R0, #0
+    BEQ salida1
+    LDR R3, [R1]
+1:  SUB R0, #1
+    CMP R0, #0
+    BEQ salida1
+    ADD R4, #1
+    LDR R2, [R1, R4, LSL #2]
+    CMP R2, R3
+    BLE 1b
+    MOV R3, R2
+    MOV R5, R4
+    B 1b
 
+           
+  salida1: MOV R0, R5  
     // Retorno, antes R0 debe tener el valor correcto
     pop {r4-r11,pc}
 endfun posicion_maximo
@@ -108,6 +157,29 @@ endfun posicion_maximo
 defun ordenar_en_sitio_menor_a_mayor
     push {r4-r11,lr}
     // Insertar código a continuación
+CMP R0, #0
+BLE fin
+SUB R7, R0, #1
+MOV R8, R1
+ordenar:
+ADD R0, R7, #1
+MOV R1, R8
+BL posicion_maximo
+LDR R2, [R8, R7, LSL #2]
+LDR R3, [R8, R0, LSL #2]
+STR R2, [R8, R0, LSL #2]
+STR R3, [R8, R7, LSL #2]
+CMP R7, #0
+BEQ fin 
+SUB R7, #1
+B ordenar
+
+
+fin: 
+
+
+
+
 
     // Retorno
     pop {r4-r11,pc}
